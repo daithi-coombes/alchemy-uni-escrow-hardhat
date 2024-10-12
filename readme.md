@@ -32,7 +32,9 @@ To run the front-end application run `npm start` from the `/app` directory. Open
  > You can acquire some testnet ether via Alchemy's Göerli Faucet.
  > Then you can change the network on Apex Wallet to point at the testnet of your choosing. From there, simply deploy and interact with the contract as you did on the local testnet!
 
-Sepolia Testnet: [0x0](https://sepolia.etherscan.io/0x0)
+Sepolia Testnet: [0x0af82b2c65ac58905d1c1c980c2b2da3643aaceb](https://sepolia.etherscan.io/0x0af82b2c65ac58905d1c1c980c2b2da3643aaceb)
+
+Approved: [0x446e677ebe2d5dc3aa0e3715b9572ab634bf5c7dcebe4ea71bbf4a89ce573d1d](https://sepolia.etherscan.io/tx/0x446e677ebe2d5dc3aa0e3715b9572ab634bf5c7dcebe4ea71bbf4a89ce573d1d)
 
 ### Challenge 2: Stylize
  > Make the application your own! Change the HTML around and play with the CSS. Add some JavaScript.
