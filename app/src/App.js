@@ -1,5 +1,10 @@
 import { ethers } from 'ethers';
 import { useEffect, useState } from 'react';
+import Box from '@mui/material/Box';
+import Container from '@mui/material/Container';
+import Grid from '@mui/material/Grid2';
+import Typography from '@mui/material/Typography';
+
 import deploy from './deploy';
 import Escrow from './Escrow';
 
@@ -32,7 +37,6 @@ function App() {
     const value = ethers.BigNumber.from(document.getElementById('wei').value);
     const escrowContract = await deploy(signer, arbiter, beneficiary, value);
 
-
     const escrow = {
       address: escrowContract.address,
       arbiter,
@@ -55,45 +59,68 @@ function App() {
 
   return (
     <>
-      <div className="contract">
-        <h1> New Contract </h1>
-        <label>
-          Arbiter Address
-          <input type="text" id="arbiter" />
-        </label>
+      <Container>
+        <Box className="header">
+          <Typography variant="h4" component="h1">
+            Alchemy University - Escrow Contract
+          </Typography>
+          <Typography variant="h5" component="h4">
+            Week 7 Challenge
+          </Typography>
+        </Box>
+        <Box sx={{ flexGrow: 1 }}>
+          <Grid container spacing={2} columns={{ xs: 6, sm: 6, md: 12 }}>
+            <Grid size={{ xs: 12, sm: 12, md: 4 }}>
+              <div className="contract">
+                <Typography variant="h4" component="h1" sx={{ mb: 2 }}>
+                  New Contract
+                </Typography>
+                <label>
+                  Arbiter Address
+                  <input type="text" id="arbiter"/>
+                </label>
 
-        <label>
-          Beneficiary Address
-          <input type="text" id="beneficiary" />
-        </label>
+                <label>
+                  Beneficiary Address
+                  <input type="text" id="beneficiary"/>
+                </label>
 
-        <label>
-          Deposit Amount (in Wei)
-          <input type="text" id="wei" />
-        </label>
+                <label>
+                  Deposit Amount (in Wei)
+                  <input type="text" id="wei"/>
+                </label>
 
-        <div
-          className="button"
-          id="deploy"
-          onClick={(e) => {
-            e.preventDefault();
+                <div
+                  className="button"
+                  id="deploy"
+                  onClick={(e) => {
+                    e.preventDefault();
 
-            newContract();
-          }}
-        >
-          Deploy
-        </div>
-      </div>
-
-      <div className="existing-contracts">
-        <h1> Existing Contracts </h1>
-
-        <div id="container">
-          {escrows.map((escrow) => {
-            return <Escrow key={escrow.address} {...escrow} />;
-          })}
-        </div>
-      </div>
+                    newContract();
+                  }}
+                >
+                  Deploy
+                </div>
+              </div>
+            </Grid>
+            <Grid size={{ xs: 12, sm: 12, md: 8 }}>
+              <div className="existing-contracts">
+                <Typography variant="h4" component="h1" sx={{ mb: 2 }}>
+                  Existing Contracts
+                </Typography>
+                <div id="container">
+                  {escrows.length && escrows.map((escrow) => {
+                    return <Escrow key={escrow.address} {...escrow} />;
+                  })}
+                  {!escrows.length && (
+                    <p>No escrows</p>
+                  )}
+                </div>
+              </div>
+            </Grid>
+          </Grid>
+        </Box>
+      </Container>
     </>
   );
 }

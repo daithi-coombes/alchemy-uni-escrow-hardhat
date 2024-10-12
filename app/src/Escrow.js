@@ -1,3 +1,6 @@
+import { styled } from '@mui/material/styles';
+import Paper from '@mui/material/Paper';
+
 export default function Escrow({
   address,
   arbiter,
@@ -5,8 +8,20 @@ export default function Escrow({
   value,
   handleApprove,
 }) {
+  const Item = styled(Paper)(({ theme }) => ({
+    backgroundColor: '#fff',
+    ...theme.typography.body2,
+    padding: theme.spacing(1),
+    textAlign: 'center',
+    color: theme.palette.text.secondary,
+    ...theme.applyStyles('dark', {
+      backgroundColor: '#1A2027',
+    }),
+  }));
+
   return (
-    <div className="existing-contract">
+    <Item className="existing-contract">
+      <h4> {address} </h4>
       <ul className="fields">
         <li>
           <div> Arbiter </div>
@@ -32,6 +47,6 @@ export default function Escrow({
           Approve
         </div>
       </ul>
-    </div>
+    </Item>
   );
 }
