@@ -34,14 +34,16 @@ function App() {
   async function newContract() {
     const beneficiary = document.getElementById('beneficiary').value;
     const arbiter = document.getElementById('arbiter').value;
-    const value = ethers.BigNumber.from(document.getElementById('wei').value);
-    const escrowContract = await deploy(signer, arbiter, beneficiary, value);
+    const value = document.getElementById('amount').value;
+    const denom = document.getElementById('denomination').value;
+    const wei = ethers.utils.parseUnits(value.toString(), denom);
+    const escrowContract = await deploy(signer, arbiter, beneficiary, wei);
 
     const escrow = {
       address: escrowContract.address,
       arbiter,
       beneficiary,
-      value: value.toString(),
+      value: wei.toString(),
       handleApprove: async () => {
         escrowContract.on('Approved', () => {
           document.getElementById(escrowContract.address).className =
@@ -86,10 +88,17 @@ function App() {
                 </label>
 
                 <label>
-                  Deposit Amount (in Wei)
-                  <input type="text" id="wei"/>
+                  Deposit Amount
+                  <input type="text" id="amount"/>
                 </label>
 
+                <label>
+                  <select id="denomination">
+                    <option value="ether">Eth</option>
+                    <option value="gwei">Gwei</option>
+                    <option value="wei">Wei</option>
+                  </select>
+                </label>
                 <div
                   className="button"
                   id="deploy"
