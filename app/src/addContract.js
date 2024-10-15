@@ -11,8 +11,8 @@ export default async function addContract(
 ) {
   const buttonId = `approve-${id}`;
 
-  const container = document.getElementById('container');
-  container.innerHTML += createHTML(buttonId, arbiter, beneficiary, value);
+  const escrowList = document.getElementById('escrow-list');
+  escrowList.innerHTML += createHTML(buttonId, arbiter, beneficiary, value);
 
   contract.on('Approved', () => {
     document.getElementById(buttonId).className = 'complete';

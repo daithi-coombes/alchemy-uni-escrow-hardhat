@@ -31,30 +31,59 @@ function App() {
     getAccounts();
   }, [account]);
 
-  async function newContract() {
-    const beneficiary = document.getElementById('beneficiary').value;
-    const arbiter = document.getElementById('arbiter').value;
-    const value = document.getElementById('amount').value;
-    const denom = document.getElementById('denomination').value;
-    const wei = ethers.utils.parseUnits(value.toString(), denom);
-    const escrowContract = await deploy(signer, arbiter, beneficiary, wei);
-
-    const escrow = {
-      address: escrowContract.address,
-      arbiter,
-      beneficiary,
-      value: wei.toString(),
+  function buildEscrow(data, contract, signer) {
+    return {
+      ...data,
       handleApprove: async () => {
-        escrowContract.on('Approved', () => {
-          document.getElementById(escrowContract.address).className =
+        contract.on('Approved', () => {
+          document.getElementById(contract.address).className =
             'complete';
-          document.getElementById(escrowContract.address).innerText =
+          document.getElementById(contract.address).innerText =
             "✓ It's been approved!";
         });
 
-        await approve(escrowContract, signer);
-      },
-    };
+        await approve(contract, signer);
+      }
+    }
+  }
+
+  async function loadContract() {
+    const address = document.getElementById('escrow-address').value;
+    const { abi, bytecode } = await import("./artifacts/contracts/Escrow.sol/Escrow.json")
+    const Escrow = new ethers.ContractFactory(abi, bytecode, signer);
+    const escrowContract = Escrow.attach(address);
+    const provider = new ethers.providers.Web3Provider(window.ethereum);
+
+    const beneficiary = await escrowContract.beneficiary();
+    const arbiter = await escrowContract.arbiter();
+    const value = (await provider
+      .getBalance(escrowContract.address))
+      .toString();
+
+    const escrow = buildEscrow({
+      address: escrowContract.address,
+      arbiter,
+      beneficiary,
+      value,
+    }, escrowContract, signer);
+
+    setEscrows([...escrows, escrow]);
+  }
+
+  async function newContract() {
+    const beneficiary = document.getElementById('beneficiary').value;
+    const arbiter = document.getElementById('arbiter').value;
+    const amount = document.getElementById('amount').value;
+    const denom = document.getElementById('denomination').value;
+    const value = ethers.utils.parseUnits(amount.toString(), denom).toString();
+    const escrowContract = await deploy(signer, arbiter, beneficiary, value);
+
+    const escrow = buildEscrow({
+      address: escrowContract.address,
+      arbiter,
+      beneficiary,
+      value,
+    }, escrowContract, signer);
 
     setEscrows([...escrows, escrow]);
   }
@@ -117,7 +146,25 @@ function App() {
                 <Typography variant="h4" component="h1" sx={{ mb: 2 }}>
                   Existing Contracts
                 </Typography>
-                <div id="container">
+
+                <div>
+                  <label>
+                    <input type="text" id="escrow-address" placeholder="escrow address"/>
+                  </label>
+                  <div
+                    className="button"
+                    id="load-escrow"
+                    onClick={(e) => {
+                      e.preventDefault();
+
+                      loadContract();
+                    }}
+                  >
+                    Load Escrow
+                  </div>
+                </div>
+
+                <div id="escrow-list">
                   {escrows.length && escrows.map((escrow) => {
                     return <Escrow key={escrow.address} {...escrow} />;
                   })}
