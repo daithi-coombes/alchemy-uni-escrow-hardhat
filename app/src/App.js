@@ -68,6 +68,8 @@ function App() {
     }, escrowContract, signer);
 
     setEscrows([...escrows, escrow]);
+
+    document.getElementById('escrow-address').value = '';
   }
 
   async function newContract() {
@@ -86,6 +88,11 @@ function App() {
     }, escrowContract, signer);
 
     setEscrows([...escrows, escrow]);
+
+    document.getElementById('beneficiary').value = '';
+    document.getElementById('arbiter').value = '';
+    document.getElementById('amount').value = '';
+    document.getElementById('denomination').value = 'ether';
   }
 
   return (
